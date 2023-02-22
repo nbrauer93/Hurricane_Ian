@@ -221,11 +221,29 @@ slope_zdr_ice = np.asarray(slope_zdr_ice)
 
 
 #Now let's plot as time series
+#Compute 3 point moving average to smooth time series
+
+def moving_avg(x, n):
+    cumsum = np.cumsum(np.insert(x, 0, 0)) 
+    return (cumsum[n:] - cumsum[:-n]) / float(n)
+
+n = 3
+
+z_warm_avg = moving_avg(slope_z_warm,n)
+z_ice_avg = moving_avg(slope_z_ice,n)
+
+zdr_warm_avg = moving_avg(slope_zdr_warm,n)
+zdr_ice_avg = moving_avg(slope_zdr_ice,n)
+
+
+
+
+
 
 
 plt.figure(figsize=(10,10))
-plt.plot(times,slope_z_warm, color = 'k', label = 'Slope in Liquid Phase')
-plt.plot(times,slope_z_ice, color = 'b', label = 'Slope in Ice Phase')
+plt.plot(times[0:105],z_warm_avg, color = 'k', label = 'Slope in Liquid Phase')
+plt.plot(times[0:105],z_ice_avg, color = 'b', label = 'Slope in Ice Phase')
 x = [0,18,36,54,72,90,108]
 labels = np.array(['1200','1400','1600','1800','2000','2200','2400'])
 plt.xticks(x,labels,size = font_size)
@@ -242,8 +260,8 @@ plt.show()
 
    
 plt.figure(figsize=(10,10))
-plt.plot(times,slope_zdr_warm, color = 'k', label = 'Slope in Liquid Phase')
-plt.plot(times,slope_zdr_ice, color = 'b', label = 'Slope in Ice Phase')
+plt.plot(times[0:105],zdr_warm_avg, color = 'k', label = 'Slope in Liquid Phase')
+plt.plot(times[0:105],zdr_ice_avg, color = 'b', label = 'Slope in Ice Phase')
 x = [0,18,36,54,72,90,108]
 labels = np.array(['1200','1400','1600','1800','2000','2200','2400'])
 plt.xticks(x,labels,size = font_size)
