@@ -162,3 +162,96 @@ plt.title(r'KTBW Quasi-Vertical Profile 9/28 $\rho_{HV}$', size = title_size)
 plt.xticks(x,labels,size = font_size)
 plt.yticks(size = font_size)
 plt.show()
+
+
+#%%
+
+height = qvps['height']/1000
+height_warm = height[4:39]
+height_ice = height[64:87]
+
+
+#Now compute the vertical slopes of Z and Zdr from the 1-4 km layer and the 6-8 km layer 
+
+#Index to reflect each layer
+
+z_warm = qvps_z[:,4:39]    
+zdr_warm = qvps_zdr[:,4:39]  
+
+z_ice = qvps_z[:,64:87]
+zdr_ice = qvps_zdr[:,64:87]
+
+
+slope_z_warm = []
+slope_zdr_warm = []
+
+slope_z_ice = []
+slope_zdr_ice = []
+
+
+#Compute slope via linear regression: Loop through all times
+
+for i in range(z_warm.shape[0]):
+    
+    z_slope_warm = stats.linregress(z_warm[i,:],height_warm)[0]
+    slope_z_warm.append(z_slope_warm)
+    
+    zdr_slope_warm = stats.linregress(zdr_warm[i,:],height_warm)[0]
+    slope_zdr_warm.append(zdr_slope_warm)
+
+    z_slope_ice = stats.linregress(z_ice[i,:],height_ice)[0]
+    slope_z_ice.append(z_slope_ice)
+
+    zdr_slope_ice = stats.linregress(zdr_ice[i,:],height_ice)[0]
+    slope_zdr_ice.append(zdr_slope_ice)
+
+
+
+#Change lists to arrays
+
+
+slope_z_warm = np.asarray(slope_z_warm)
+slope_zdr_warm = np.asarray(slope_zdr_warm)
+
+slope_z_ice = np.asarray(slope_z_ice)
+slope_zdr_ice = np.asarray(slope_zdr_ice)
+
+
+#%%
+
+
+#Now let's plot as time series
+
+
+plt.figure(figsize=(10,10))
+plt.plot(times,slope_z_warm, color = 'k', label = 'Slope in Liquid Phase')
+plt.plot(times,slope_z_ice, color = 'b', label = 'Slope in Ice Phase')
+x = [0,18,36,54,72,90,108]
+labels = np.array(['1200','1400','1600','1800','2000','2200','2400'])
+plt.xticks(x,labels,size = font_size)
+plt.xlabel('Time (UTC)', size = font_size)
+plt.ylabel('dBZ/km', size = font_size)
+plt.yticks(size= font_size)
+plt.title(r'KTBW 9/28 Vertical Slope of $Z_{H}$ in Liquid Phase', size = title_size)
+plt.axhline(y = 0, xmin = -1.5, xmax = 4, color = 'r', linewidth =  3.0, linestyle = '--')
+plt.legend()
+plt.show()
+
+
+    
+
+   
+plt.figure(figsize=(10,10))
+plt.plot(times,slope_zdr_warm, color = 'k', label = 'Slope in Liquid Phase')
+plt.plot(times,slope_zdr_ice, color = 'b', label = 'Slope in Ice Phase')
+x = [0,18,36,54,72,90,108]
+labels = np.array(['1200','1400','1600','1800','2000','2200','2400'])
+plt.xticks(x,labels,size = font_size)
+plt.xlabel('Time (UTC)', size = font_size)
+plt.ylabel('dB/km', size = font_size)
+plt.yticks(size= font_size)
+plt.title(r'KTBW 9/28 Vertical Slope of $Z_{DR}$ in Liquid Phase', size = title_size)
+plt.axhline(y = 0, xmin = -1.5, xmax = 4, color = 'r', linewidth =  3.0, linestyle = '--')
+plt.legend()
+plt.show() 
+    
