@@ -272,4 +272,72 @@ plt.title(r'KTBW 9/28 Vertical Slope of $Z_{DR}$ in Liquid Phase', size = title_
 plt.axhline(y = 0, xmin = -1.5, xmax = 4, color = 'r', linewidth =  3.0, linestyle = '--')
 plt.legend()
 plt.show() 
+
+
+
+#Now let's estimate D_o and N_w in the liquid phase from z_warm and zdr_warm using DeHart and Bell (2021)
+
+#z_warm has shape 107 x 35 (Time x Height)
+
+d_o = np.ones((z_warm.shape))*np.nan
+
+
+for j in range(z_warm.shape[0]):
+    for k in range(z_warm.shape[1]):
+        
+        if zdr_warm[j,k]>=1:
+            
+            d_o[j,:] = 0.0536*(zdr_warm[j,:])**3 - 0.197*(zdr_warm[j,:])**2 + 0.6261*(zdr_warm[j,:]) + 1.0815
+            
+        else:
+            
+            d_o[j,:] = 0.0424*(zdr_warm[j,:])**4 - 0.4571*(zdr_warm[j,:])**3 + 0.6215*(zdr_warm[j,:])**2 + 0.457*(zdr_warm[j,:]) + 0.8808
+            
+            
+        
+        
+#Now compute log10(N_w)
+
+log_nw = np.log10(19.76*(z_warm/(d_o**7.46)))        
+        
+#%%    
     
+#Now Plot
+
+
+plt.figure(figsize=(10,10)) 
+plt.pcolormesh(times,height_warm,d_o.T, cmap = 'turbo')
+plt.xlabel('Time (UTC)', size= font_size)
+plt.ylabel('Height (km)', size = font_size)
+cbar = plt.colorbar()
+cbar.ax.tick_params(labelsize = font_size)
+cbar.set_label(label = '[mm]',size = font_size)
+
+
+plt.title(r'KTBW Quasi-Vertical Profile 9/28 $D_{0}$', size = title_size)
+x = [0,18,36,54,72,90,108]
+labels = np.array(['1200','1400','1600','1800','2000','2200','2400'])
+plt.xticks(x,labels,size = font_size)
+plt.yticks(size = font_size)
+plt.show()
+
+
+plt.figure(figsize=(10,10))
+plt.pcolormesh(times,height_warm,log_nw.T, cmap = 'turbo')
+plt.xlabel('Time (UTC)', size= font_size)
+plt.ylabel('Height (km)', size = font_size)
+cbar = plt.colorbar()
+cbar.ax.tick_params(labelsize = font_size)
+cbar.set_label(label = r'[$m^{-3} $ $mm^{-1}$]',size = font_size)
+
+
+plt.title(r'KTBW Quasi-Vertical Profile 9/28 $log_{10}(N_{W}$)', size = title_size)
+x = [0,18,36,54,72,90,108]
+labels = np.array(['1200','1400','1600','1800','2000','2200','2400'])
+plt.xticks(x,labels,size = font_size)
+plt.yticks(size = font_size)
+plt.show()
+
+
+
+
