@@ -338,6 +338,69 @@ plt.xticks(x,labels,size = font_size)
 plt.yticks(size = font_size)
 plt.show()
 
+#Let's compute the vertical slopes of D_o and N_w similar to what we did with Z and Zdr:
+    
+    
+slope_d_o = []
+slope_n_w = []
+
+
+for i in range(d_o.shape[0]):
+    
+    d_o_slope = stats.linregress(d_o[i,:],height_warm)[0]
+    slope_d_o.append(d_o_slope)
+    
+    n_w_slope = stats.linregress(log_nw[i,:],height_warm)[0]
+    slope_n_w.append(n_w_slope)
+
+
+#Convert lists to arrays
+
+slope_d_o = np.asarray(slope_d_o)
+slope_n_w = np.asarray(slope_n_w)
+
+    
+#Now apply a 3 point runnning average
+
+
+
+
+d_o_avg = moving_avg(slope_d_o,n)    
+n_w_avg = moving_avg(slope_n_w,n)    
+
+
+    
+plt.figure(figsize=(10,10))
+plt.plot(times[0:105],d_o_avg, color = 'k')
+x = [0,18,36,54,72,90,108]
+labels = np.array(['1200','1400','1600','1800','2000','2200','2400'])
+plt.xticks(x,labels,size = font_size)
+plt.xlabel('Time (UTC)', size = font_size)
+plt.ylabel('mm/km', size = font_size)
+plt.yticks(size= font_size)
+plt.title(r'KTBW 9/28 Vertical Slope of $D_{0}$ in Liquid Phase', size = title_size)
+plt.axhline(y = 0, xmin = -1.5, xmax = 4, color = 'r', linewidth =  3.0, linestyle = '--')
+plt.show()
+
+
+    
+
+   
+plt.figure(figsize=(10,10))
+plt.plot(times[0:105],n_w_avg, color = 'k')
+x = [0,18,36,54,72,90,108]
+labels = np.array(['1200','1400','1600','1800','2000','2200','2400'])
+plt.xticks(x,labels,size = font_size)
+plt.xlabel('Time (UTC)', size = font_size)
+plt.ylabel(r'($m^{-3}$ $mm^{-1}$)/km', size = font_size)
+plt.yticks(size= font_size)
+plt.title(r'KTBW 9/28 Vertical Slope of $log_{10}(N_{W})$ in Liquid Phase', size = title_size)
+plt.axhline(y = 0, xmin = -1.5, xmax = 4, color = 'r', linewidth =  3.0, linestyle = '--')
+
+plt.show() 
+    
+
+
 
 
 
