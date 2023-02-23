@@ -400,7 +400,60 @@ plt.axhline(y = 0, xmin = -1.5, xmax = 4, color = 'r', linewidth =  3.0, linesty
 plt.show() 
     
 
+#Let's now compute vertical averages of d_o and n_w
 
+
+d_o_height_avg = []
+nw_height_avg = []
+
+for i in range(d_o.shape[0]):
+    
+    d_o_avg = np.nanmean(d_o[i,:], axis = 0)
+    nw_avg = np.nanmean(log_nw[i,:], axis = 0)
+    
+    
+    d_o_height_avg.append(d_o_avg)
+    nw_height_avg.append(nw_avg)
+
+d_o_height_avg = np.asarray(d_o_height_avg)
+nw_height_avg = np.asarray(nw_height_avg)
+
+
+#Apply 10 point running average
+
+d_o_avg_vert = moving_avg(d_o_height_avg,n)    
+n_w_avg_vert = moving_avg(nw_height_avg,n) 
+
+
+
+
+    
+plt.figure(figsize=(10,10))
+plt.plot(times[0:98],n_w_avg_vert, color = 'k')
+x = [0,18,36,54,72,90,108]
+labels = np.array(['1200','1400','1600','1800','2000','2200','2400'])
+plt.xticks(x,labels,size = font_size)
+plt.xlabel('Time (UTC)', size = font_size)
+plt.ylabel(r'($m^{-3}$ $mm^{-1}$)/km', size = font_size)
+plt.yticks(size= font_size)
+plt.title(r'KTBW 9/28 Vertical Average of $log_{10}(N_{W})$ in Liquid Phase', size = title_size)
+#plt.axhline(y = 0, xmin = -1.5, xmax = 4, color = 'r', linewidth =  3.0, linestyle = '--')
+
+plt.show()     
+
+
+plt.figure(figsize=(10,10))
+plt.plot(times[0:98],d_o_avg_vert, color = 'k')
+x = [0,18,36,54,72,90,108]
+labels = np.array(['1200','1400','1600','1800','2000','2200','2400'])
+plt.xticks(x,labels,size = font_size)
+plt.xlabel('Time (UTC)', size = font_size)
+plt.ylabel(r'mm/km', size = font_size)
+plt.yticks(size= font_size)
+plt.title(r'KTBW 9/28 Vertical Average of $D_{0}$ in Liquid Phase', size = title_size)
+#plt.axhline(y = 0, xmin = -1.5, xmax = 4, color = 'r', linewidth =  3.0, linestyle = '--')
+
+plt.show()  
 
 
 
